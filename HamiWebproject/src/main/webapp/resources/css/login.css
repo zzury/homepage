@@ -1,0 +1,63 @@
+@charset "EUC-KR";
+#loginForm{
+  margin-top:160px;
+  margin-bottom:200px;
+  margin-left:200px;
+  margin-right:200px;
+}
+ h1 {font-size: 40px;
+     text-align:center;}
+ legend {display: none;}
+ fieldset {border: none;}
+ .info{
+   border: 1px solid black;
+   font-size: 16px;
+   text-align: center;
+   padding:20px;
+   margin: 0px auto;
+  }
+  .login{position: relative;}
+  .login label{
+    width: 100px;
+    height: 40px;
+    display: inline-block;
+    line-height: 40px;
+  }
+  .login input {
+    width:400;
+    height:40px;
+    border:none;
+    border-bottom:1px solid #000;
+    line-height: 40px;
+  }
+  .login button{
+    width:90px;
+    height:90px;
+    background:black;
+    color:white;
+    border-radius: 50%;
+    border:none;
+    position: absolute;
+    top:0;
+    right:0;
+  }
+  .login button:hover{
+    cusor: pointer;
+    background:white;
+    color:black;
+    border:2px solid black;
+  }
+  .join button{
+    width:560px;
+    height:40px;
+    background:black;
+    color:white;
+    border:none;
+    margin:20px auto;
+  }
+  .join button:hover{
+    cusor: pointer;
+    background:white;
+    color:black;
+    border:2px solid black;
+  }
