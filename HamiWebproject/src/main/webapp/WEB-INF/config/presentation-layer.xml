@@ -10,6 +10,7 @@
          <props>
             <prop key="/login.do">login</prop>
             <prop key="/logout.do">logout</prop>
+            <prop key="/makereservation.do">makereservation</prop>
          </props>
       </property>
    </bean>
@@ -17,6 +18,7 @@
    <!-- Controller 등록 -->
    <bean id="login" class="com.company.view.user.LoginController"></bean>
    <bean id="logout" class="com.company.view.user.LogoutController"></bean>
+   <bean id="makereservation" class="com.company.view.booking.MakeReservationController"></bean>
    
    <!-- ViewResolver 등록 -->
    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
