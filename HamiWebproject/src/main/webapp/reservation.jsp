@@ -1,12 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=EUC-KR"
     pageEncoding="EUC-KR"%>
+<%@page import="java.util.Calendar"%>
+<%
+	Calendar cal = Calendar.getInstance(); //ì´ë²ˆ ë‹¬ ì €ì¥ì„ ìœ„í•œ
+	Calendar cal2 = Calendar.getInstance(); //ì €ë²ˆ ë‹¬ ì €ì¥ì„ ìœ„í•´ í˜„ì¬ ë‚ ì§œë¥¼ ì €ì¥
+	cal2.set(Calendar.MONTH,-1); //ì €ë²ˆ ë‹¬ë¡œ ì´ë™
+	
+	int cal_last = cal.getActualMaximum(Calendar.DATE); //ì´ë²ˆ ë‹¬ì˜ ì „ì²´ ë‚ ì§œ
+	int cal2_last = cal2.getActualMaximum(Calendar.DATE); //ì „ë‹¬ì˜ ì „ì²´ ë‚ ì§œ
+	
+	int year = cal.get(Calendar.YEAR); //2019 : í˜„ì¬ ë…„ë„
+	int month = cal.get(Calendar.MONTH)+1;	//9 : í˜„ì¬ ë‹¬
+	int date = cal.get(Calendar.DATE);	//25 : í˜„ì¬ ì¼
+	
+	cal.set(Calendar.DATE,1);	//1ì¼ë¡œ ì…‹
+	int first_day = cal.get(Calendar.DAY_OF_WEEK); //ì¼ìš”ì¼ 1, í† ìš”ì¼ 7
+	
+	int cal2_days = first_day-2; //ì¼ìš”ì¼ -1, í† ìš”ì¼ 5
+	int prev_index = cal2_days; //ì¸ë±ìŠ¤ë¡œ ë°›ì•„ì™€ í•˜ë‚˜ì”© ì¤„ì´ë©° ë§ˆì´ë„ˆìŠ¤í•œë‹¤.
+	int cur_index = 1; //ì´ë²ˆë‹¬ì˜ ì‹œì‘ì¼
+	int next_index = 1; //ë‹¤ìŒë‹¬ì˜ ì‹œì‘ì¼
+	
+	String[] month_eng = {"JANUARY","FEBRUARY","MARCH","APRIL","MAY","JUNE","JULY","AUGUST","SEPTEMBER","OCTOBER","NOVEMBER","DECEMBER"};
+	
+	int index = 0;
+%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="EUC-KR">
-<title>HAMI - ¿¹¾àÇÏ±â</title>
+<title>HAMI - ì˜ˆì•½í•˜ê¸°</title>
 <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/common.css">
-<style> /*´Ş·Â css*/
+<style> /*ë‹¬ë ¥ css*/
 .month{
   color: black;
   font-size: 25px;
@@ -51,12 +76,12 @@ border: 1px solid #ddd;
 margin-right: -1px;
 margin-bottom: -1px;
 }
-#calendar ul.weekdays { /*¿äÀÏ ÀüÃ¼ ¼¿*/
+#calendar ul.weekdays { /*ìš”ì¼ ì „ì²´ ì…€*/
 width: 708px;
 height: 23px;
 background: black;
 }
-#calendar ul.weekdays li { /*¿äÀÏ*/
+#calendar ul.weekdays li { /*ìš”ì¼*/
 text-align: center;
 text-transform: uppercase;
 line-height: 20px;
@@ -65,14 +90,14 @@ padding: 1px 6px;
 color: white;
 font-size: 13px;
 }
-#calendar .days li { /*³¯Â¥ ¼¿ */
+#calendar .days li { /*ë‚ ì§œ ì…€ */
 width: 102px;
 height: 85px;
 }
-#calendar .days li:hover { /*³¯Â¥ ¼¿ È£¹ö */
+#calendar .days li:hover { /*ë‚ ì§œ ì…€ í˜¸ë²„ */
 background: #e4f2f2;
 }
-#calendar .date { /*³¯Â¥ */
+#calendar .date { /*ë‚ ì§œ */
 text-align: center;
 margin-bottom: 5px;
 padding: 4px;
@@ -103,19 +128,54 @@ color: #666;
   #calendar{
     width:100%;
   }
-  #calendar ul.weekdays { /*¿äÀÏ ÀüÃ¼ ¼¿*/
+  #calendar ul.weekdays { /*ìš”ì¼ ì „ì²´ ì…€*/
   width: 100%;
   height: 23px;
   background: black;
   }
-  #calendar .days{ /*³¯Â¥ ¼¿ */
+  #calendar .days{ /*ë‚ ì§œ ì…€ */
   display:flex;
   height: 70px;
   }
-  #calendar .days li { /*³¯Â¥ ¼¿ */
+  #calendar .days li { /*ë‚ ì§œ ì…€ */
   flex-grow:1;
   height: 70px;
   }
+}
+	
+#time_wrap{
+  margin-top:15px;
+  width:696px;
+  border:1px solid #ddd;
+  padding:5px;
+  text-align:center;
+}
+#time_wrap .lab_wrap{
+  padding-left:15px;
+  padding-right:15px;
+}
+.time_label{
+  float:left;
+}
+.time_small_lab{
+  float:right;
+}
+#time_btn{
+  list-style:none;
+  margin:0;
+  padding:0;
+  display:inline-block;
+}
+#time_btn li{
+  border: 1px solid #ddd;
+  float:left;
+  padding:10px;
+}
+.time_label{
+  font-size:15px;
+}
+.time_small_lab{
+  font-size:12px;
 }
 </style>
 <script>
@@ -136,18 +196,18 @@ function nav_span(){
     </div>
       <nav id="nav">
         <ul>
-          <a href="#"><li>¿À½Ã´Â±æ</li></a>
+          <a href="#"><li>ì˜¤ì‹œëŠ”ê¸¸</li></a>
           <%
 			String session_id = (String) session.getAttribute("id");
 			if(session_id==null) {
-			//user id°¡ ¼¼¼ÇÀ¸·Î ³Ñ¾î¿ÀÁö ¾Ê¾Ò´Ù¸é ·Î±×ÀÎ »óÅÂ°¡ ¾Æ´Ô%>
-				<a href="login.jsp"><li>·Î±×ÀÎ</li></a>
+			//user idê°€ ì„¸ì…˜ìœ¼ë¡œ ë„˜ì–´ì˜¤ì§€ ì•Šì•˜ë‹¤ë©´ ë¡œê·¸ì¸ ìƒíƒœê°€ ì•„ë‹˜%>
+				<a href="login.jsp"><li>ë¡œê·¸ì¸</li></a>
 			<%}else{%>
-				<a href="logout.do"><li>·Î±×¾Æ¿ô</li></a>
+				<a href="logout.do"><li>ë¡œê·¸ì•„ì›ƒ</li></a>
 			<%}%>
-          <a href="#"><li>¸¶ÀÌÆäÀÌÁö</li></a>
-          <a href="reservation.jsp"><li>¿¹¾à ¾È³»</li></a>
-          <a href="#"><li>¼±»ı´Ô ¼Ò°³</li></a>
+          <a href="#"><li>ë§ˆì´í˜ì´ì§€</li></a>
+          <a href="reservation.jsp"><li>ì˜ˆì•½ ì•ˆë‚´</li></a>
+          <a href="#"><li>ì„ ìƒë‹˜ ì†Œê°œ</li></a>
         </ul>
       </nav>
       </div>
@@ -158,7 +218,7 @@ function nav_span(){
                <h1> RESERVATION</h1>
            </div>
            <div id="calendar">
-                 <div class="month">August 2014</div>
+                 <div class="month"><%=month_eng[month]%> <%=year%></div>
                <ul class="weekdays">
                    <li>Sunday</li>
                    <li>Monday</li>
@@ -169,163 +229,51 @@ function nav_span(){
                    <li>Saturday</li>
                </ul>
                <!-- Days from previous month -->
-               <ul class="days">
-                   <li class="day other-month">
-                       <div class="date">27</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">28</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">29</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">30</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">31</div>
-                   </li>
-                   <!-- Days in current month -->
-                   <li class="day">
-                       <div class="date">1</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">2</div>
-                   </li>
-               </ul>
-                   <!-- Row #2 -->
-               <ul class="days">
-                   <li class="day">
-                       <div class="date">3</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">4</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">5</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">6</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">7</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">8</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">9</div>
-                   </li>
-               </ul>
-                   <!-- Row #3 -->
-               <ul class="days">
-                   <li class="day">
-                       <div class="date">10</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">11</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">12</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">13</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">14</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">15</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">16</div>
-                   </li>
-               </ul>
-                   <!-- Row #4 -->
-               <ul class="days">
-                   <li class="day">
-                       <div class="date">17</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">18</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">19</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">20</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">21</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">22</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">23</div>
-                   </li>
-               </ul>
-                       <!-- Row #5 -->
-               <ul class="days">
-                   <li class="day">
-                       <div class="date">24</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">25</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">26</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">27</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">28</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">29</div>
-                   </li>
-                   <li class="day">
-                       <div class="date">30</div>
-                   </li>
-               </ul>
-               <!-- Row #6 -->
-               <ul class="days">
-                   <li class="day">
-                       <div class="date">31</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">1</div> <!-- Next Month -->
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">2</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">3</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">4</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">5</div>
-                   </li>
-                   <li class="day other-month">
-                       <div class="date">6</div>
-                   </li>
-               </ul>
+               <%
+               for (int i=0;i<6;i++){%>
+            	   <ul class="days">
+            	  <%for (int j=0;j<7;j++){
+            	  		if(index<cal2_days){%>
+            		  	<li class="day other-month">
+                       		<div class="date"><%=cal2_last-prev_index%></div>
+                   		</li>
+            	   <%	prev_index--;
+            	  		}else if(index<(cal2_days+cal_last)+1){%>
+            	  			<li class="day" onclick="selectDate(<%=year%>,<%=month%>,<%=cur_index%>)">
+                            	<div class="date"><%=cur_index %></div>
+                        	</li>
+                        	
+            	  	<%cur_index++;
+            	  		}else{%>
+            	  			<li class="day other-month">
+                       			<div class="date"><%=next_index%></div>
+                   			</li>
+            	  	<%	next_index++;
+            	  		}
+            	  		index++;
+            	  	}
+            	  %>
+            	  </ul>
+             <% }
+               %>
            </div><!-- /. calendar -->
        </div><!-- /. wrap -->
        <br><br>
        <div class="reservation_form">
-         
+         <form action="makereservation.do" method="POST">
+         <input type="text" id="year"/>
+         <input type="text" id="month"/>
+         <input type="text" id="date"/>
+         <input type="submit" value="ì§‘ì¢€ê°€ê³ ì‹¶ë‹¤ì§„ì§œì•„ì•„ì•„"/>
+        </form>
        </div>
       <fieldset>
         <legend>notice</legend>
             <div class="notice">
-              <h3>¿¹¾à¾È³»</h3>
-                    ¨ç ¿¹¾àÀº È¸¿øÁ¦·Î ÁøÇàµË´Ï´Ù.<br>
-                    ¨è ¿Ã¹Ù¸¥ ¿¹¾à¹®È­¸¦ À§ÇØ ¿¹¾à±İÀ» ¹Ş°Ú½À´Ï´Ù.<br>
-                    ¨é ¿¹¾àº¯°æ½Ã ¿¬¶ôÇÏ¼¼¿ä ÁÖ¸®Âô HTML °³ÀßÂ§´Ù ¤·¤¸¤·¤¸
+              <h3>ì˜ˆì•½ì•ˆë‚´</h3>
+                    â‘  ì˜ˆì•½ì€ íšŒì›ì œë¡œ ì§„í–‰ë©ë‹ˆë‹¤.<br>
+                    â‘¡ ì˜¬ë°”ë¥¸ ì˜ˆì•½ë¬¸í™”ë¥¼ ìœ„í•´ ì˜ˆì•½ê¸ˆì„ ë°›ê² ìŠµë‹ˆë‹¤.<br>
+                    â‘¢ ì˜ˆì•½ë³€ê²½ì‹œ ì—°ë½í•˜ì„¸ìš” ì£¼ë¦¬ì°¡ HTML ê°œì˜ì§ ë‹¤ ã…‡ã…ˆã…‡ã…ˆ
                     </div><br>
       </fieldset>
     </div>
