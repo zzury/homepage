@@ -2,33 +2,62 @@ package com.company.view.booking;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
+import com.company.hami.booking.BookingDAO;
 import com.company.hami.booking.BookingVO;
 
 public class MakeReservationController implements Controller{
 
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
-		 //1. »ç¿ëÀÚ ÀÔ·Â Á¤º¸ ÃßÃâ
-        String year = request.getParameter("year");
-        String month = request.getParameter("month");
-        String date = request.getParameter("date");
-        
-        //2. µ¥ÀÌÅÍº£ÀÌ½º ¿¬°á
-        BookingVO vo = new BookingVO();
-        BookingDAO bookingDAO = new BookingDAO();
-        //1~9¿ù¿¡ 0 ºÙÀÌ´Â Ã³¸®´Â ³»ÀÏÇÒ·¡
-        vo.setRes_date(year+"-"+month+"-"+date);
-        bookingDAO.makeReservation(vo);
-        
-        
-        //3. Æ÷¿öµù
-        ModelAndView mav = new ModelAndView();
-        mav.setViewName("index");
-        return mav;
-     }
-
+		System.out.println("makeReservation ì¤€ë¹„");	
+			//1. ì‚¬ìš©ì ì…ë ¥ ì •ë³´ ì¶”ì¶œ
+			/*
+			 * String year = request.getParameter("res_year"); String month =
+			 * request.getParameter("res_month"); String date =
+			 * request.getParameter("res_date"); String res_time =
+			 * request.getParameter("res_time");
+			 */	
+				//ë‚ ì§œì™€ ì‹œê°„ì€ ë‹¬ë ¥ì—ì„œ ë°›ì•„ì˜¤ê²Œ ìˆ˜ì •í•´ì¤˜ì•¼ í•¨!!
+				String year = "2019";
+				String month = "3";
+				String date = "5";
+				String res_time = "13";
+				
+				String prepayment = request.getParameter("prepayment");
+				
+				String id = request.getParameter("id");
+				String d_name = request.getParameter("d_name");
+				String d_weight = request.getParameter("d_weight");
+				String demend = request.getParameter("demend");
+				
+				//2. ë°ì´í„°ë² ì´ìŠ¤ ì—°ê²°
+				BookingVO vo = new BookingVO();
+				
+				//1~9ì›”ì— 0 ë¶™ì´ëŠ” ì²˜ë¦¬ëŠ” ë‚´ì¼í• ë˜		
+				if(month.length()==1) { month="0"+month; }
+				if(date.length()==1) { date="0"+date; }		 
+				vo.setRes_date(year+"-"+month+"-"+date);
+				
+				vo.setRes_time(Integer.parseInt(res_time));
+				vo.setPrepayment(Integer.parseInt(prepayment));
+				
+				vo.setId(id);
+				vo.setD_name(d_name);
+				vo.setD_weight(Integer.parseInt(d_weight));
+				vo.setDemend(demend);
+				
+				BookingDAO bookingDAO = new BookingDAO();
+				
+				bookingDAO.makeReservation(vo);				
+				//3. í¬ì›Œë”©
+				ModelAndView mav = new ModelAndView();
+				mav.setViewName("index");
+				
+				return mav;
+			}
 }
